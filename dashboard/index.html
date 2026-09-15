@@ -188,6 +188,13 @@
     margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line);
     color: var(--ink-faint); font-size: 0.78rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
+
+  .step-nav {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 12px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line);
+  }
+  .step-nav .next-slot { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; margin-left: auto; }
+  .step-nav .hint { font-size: 0.76rem; color: var(--ink-faint); max-width: 34ch; text-align: right; }
 </style>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -370,8 +377,34 @@
       </button>
     `).join("");
     route.querySelectorAll(".route-node").forEach((btn) => {
-      btn.addEventListener("click", () => { state.activeTab = btn.dataset.code; render(); });
+      btn.addEventListener("click", () => goTo(btn.dataset.code));
     });
+  }
+
+  function goTo(code) { state.activeTab = code; render(); }
+
+  // Appends a Précédent / Étape suivante bar to the current phase panel.
+  // `nextEnabled` gates the Next button; `nextHint` explains why when it's disabled.
+  function appendStepNav(container, code, nextEnabled, nextHint) {
+    const idx = PHASES.findIndex((p) => p.code === code);
+    const prev = PHASES[idx - 1];
+    const next = PHASES[idx + 1];
+    if (!prev && !next) return;
+    const nav = document.createElement("div");
+    nav.className = "step-nav";
+    nav.innerHTML = `
+      ${prev ? `<button type="button" class="btn secondary" id="step-prev">← ${esc(prev.title)}</button>` : "<span></span>"}
+      ${next ? `
+        <div class="next-slot">
+          <button type="button" class="btn" id="step-next" ${nextEnabled ? "" : "disabled"}>${esc(next.title)} →</button>
+          ${!nextEnabled && nextHint ? `<span class="hint">${esc(nextHint)}</span>` : ""}
+        </div>` : ""}
+    `;
+    container.appendChild(nav);
+    const prevBtn = nav.querySelector("#step-prev");
+    if (prevBtn) prevBtn.addEventListener("click", () => goTo(prev.code));
+    const nextBtn = nav.querySelector("#step-next");
+    if (nextBtn && nextEnabled) nextBtn.addEventListener("click", () => goTo(next.code));
   }
 
   // ---------- Phase 1: Besoin ----------
@@ -497,10 +530,12 @@
         };
         state.editingNeed = false;
         saveTrip((t) => { t.need = need; });
+        goTo("VOL");
       });
     }
     const editBtn = document.getElementById("edit-need-btn");
     if (editBtn) editBtn.addEventListener("click", () => { state.editingNeed = true; render(); });
+    appendStepNav(container, "BES", !!(n && n.locked) && !state.editingNeed, "Enregistre tes critères pour continuer.");
   }
 
   // ---------- Phase 2 / 3: Vol & Hébergement (shared pattern) ----------
@@ -577,7 +612,11 @@
 
   function renderVol(container) {
     const need = state.trip.need;
-    if (!need || !need.locked) { container.innerHTML = `<p class="eyebrow">Phase 2 — Vol</p><h2>Choisir le vol</h2>` + lockedNotice("générer ta recherche de vol"); return; }
+    if (!need || !need.locked) {
+      container.innerHTML = `<p class="eyebrow">Phase 2 — Vol</p><h2>Choisir le vol</h2>` + lockedNotice("générer ta recherche de vol");
+      appendStepNav(container, "VOL", false, "Complète d'abord la Phase 1 — Besoin.");
+      return;
+    }
     const url = googleFlightsUrl(need);
     const item = state.trip.flight;
     container.innerHTML = `
@@ -594,11 +633,16 @@
       ${checkCard("flight", item, need)}
     `;
     wireUpload("flight", need);
+    appendStepNav(container, "VOL", !!item.validated, "Valide ton vol (capture + « Marquer comme validé ») pour continuer.");
   }
 
   function renderHeb(container) {
     const need = state.trip.need;
-    if (!need || !need.locked) { container.innerHTML = `<p class="eyebrow">Phase 3 — Hébergement</p><h2>Choisir l'hébergement</h2>` + lockedNotice("générer ta recherche d'hébergement"); return; }
+    if (!need || !need.locked) {
+      container.innerHTML = `<p class="eyebrow">Phase 3 — Hébergement</p><h2>Choisir l'hébergement</h2>` + lockedNotice("générer ta recherche d'hébergement");
+      appendStepNav(container, "HEB", false, "Complète d'abord la Phase 1 — Besoin.");
+      return;
+    }
     const url = bookingUrl(need);
     const item = state.trip.stay;
     container.innerHTML = `
@@ -615,6 +659,9 @@
       ${checkCard("stay", item, need)}
     `;
     wireUpload("stay", need);
+    const nextEnabled = !!(item.validated && state.trip.flight.validated);
+    const hint = !state.trip.flight.validated ? "Valide d'abord ton vol (Phase 2) pour continuer." : "Valide ton hébergement (capture + « Marquer comme validé ») pour continuer.";
+    appendStepNav(container, "HEB", nextEnabled, hint);
   }
 
   function wireUpload(kind, need) {
@@ -639,6 +686,7 @@
         ${item.content ? `<div class="note-box">${esc(item.content).replace(/\n/g, "<br>")}</div>` : `<p class="note-box">Rien pour l'instant — continue la conversation avec ton Travel Planner pour compléter cette phase. Cette page se mettra à jour automatiquement.</p>`}
       </div>
     `;
+    appendStepNav(container, code, item.status === "done", "Cette étape se valide avec ton Travel Planner dans la conversation.");
   }
 
   // ---------- top-level render ----------
