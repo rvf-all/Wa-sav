@@ -16,46 +16,32 @@
     --active-bg: #FBF1DF;
     --done: #2F7A55;
     --done-bg: #E6F2EA;
+    --danger: #B3432E;
+    --danger-bg: #FBEAE6;
     --shadow: 0 1px 2px rgba(22, 32, 43, 0.06), 0 8px 20px -12px rgba(22, 32, 43, 0.18);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #101923;
-      --surface: #17222E;
-      --surface-alt: #1E2B39;
-      --ink: #ECF1F5;
-      --ink-muted: #9DAAB6;
-      --ink-faint: #67757F;
-      --line: #2B3B4A;
-      --brand: #7FA8D6;
-      --brand-ink: #0E1620;
-      --pending: #7C8896;
-      --pending-bg: #1E2833;
-      --active: #E3A23D;
-      --active-bg: #2C2417;
-      --done: #55B885;
-      --done-bg: #16281F;
-      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+      --bg: #101923; --surface: #17222E; --surface-alt: #1E2B39;
+      --ink: #ECF1F5; --ink-muted: #9DAAB6; --ink-faint: #67757F; --line: #2B3B4A;
+      --brand: #7FA8D6; --brand-ink: #0E1620;
+      --pending: #7C8896; --pending-bg: #1E2833;
+      --active: #E3A23D; --active-bg: #2C2417;
+      --done: #55B885; --done-bg: #16281F;
+      --danger: #E08469; --danger-bg: #2C1B17;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -14px rgba(0,0,0,0.6);
     }
   }
   :root[data-theme="dark"] {
-    --bg: #101923;
-    --surface: #17222E;
-    --surface-alt: #1E2B39;
-    --ink: #ECF1F5;
-    --ink-muted: #9DAAB6;
-    --ink-faint: #67757F;
-    --line: #2B3B4A;
-    --brand: #7FA8D6;
-    --brand-ink: #0E1620;
-    --pending: #7C8896;
-    --pending-bg: #1E2833;
-    --active: #E3A23D;
-    --active-bg: #2C2417;
-    --done: #55B885;
-    --done-bg: #16281F;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+    --bg: #101923; --surface: #17222E; --surface-alt: #1E2B39;
+    --ink: #ECF1F5; --ink-muted: #9DAAB6; --ink-faint: #67757F; --line: #2B3B4A;
+    --brand: #7FA8D6; --brand-ink: #0E1620;
+    --pending: #7C8896; --pending-bg: #1E2833;
+    --active: #E3A23D; --active-bg: #2C2417;
+    --done: #55B885; --done-bg: #16281F;
+    --danger: #E08469; --danger-bg: #2C1B17;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 24px -14px rgba(0,0,0,0.6);
   }
 
   * { box-sizing: border-box; }
@@ -64,271 +50,143 @@
     background: var(--bg);
     color: var(--ink);
     font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
-    padding-inline: max(16px, calc((100vw - 760px) / 2));
-    padding-block: 32px 64px;
+    padding-inline: max(16px, calc((100vw - 720px) / 2));
+    padding-block: 28px 64px;
     margin: 0;
   }
 
-  .mono {
-    font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-    font-variant-numeric: tabular-nums;
-  }
+  .mono { font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace; font-variant-numeric: tabular-nums; }
 
   .eyebrow {
     font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    font-size: 0.72rem;
-    color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
+    font-size: 0.72rem; color: var(--ink-muted);
   }
+
+  a { color: var(--brand); }
 
   /* ---------- Header ---------- */
   header.top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px; flex-wrap: wrap;
     border-bottom: 2px solid var(--ink);
-    padding-bottom: 20px;
-    margin-bottom: 28px;
+    padding-bottom: 18px; margin-bottom: 22px;
   }
   header.top h1 {
-    font-size: clamp(1.9rem, 5vw, 2.5rem);
-    font-weight: 700;
-    margin: 4px 0 6px;
-    text-wrap: balance;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.7rem, 5vw, 2.2rem); font-weight: 700;
+    margin: 4px 0 6px; text-wrap: balance; letter-spacing: -0.01em;
   }
-  header.top .status-line {
-    color: var(--ink-muted);
-    font-size: 0.95rem;
-    max-width: 46ch;
-  }
-  .stamp {
-    text-align: right;
-    font-size: 0.72rem;
-    color: var(--ink-faint);
-    white-space: nowrap;
-  }
-  .stamp strong {
-    display: block;
-    color: var(--ink-muted);
-    font-weight: 600;
-    font-size: 0.72rem;
+  header.top .status-line { color: var(--ink-muted); font-size: 0.92rem; max-width: 46ch; }
+  .stamp { text-align: right; font-size: 0.72rem; color: var(--ink-faint); white-space: nowrap; }
+  .stamp strong { display: block; color: var(--ink-muted); font-weight: 600; font-size: 0.72rem; }
+
+  .banner {
+    background: var(--active-bg); color: var(--active); border: 1px solid var(--active);
+    border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; margin-bottom: 20px;
   }
 
-  /* ---------- Route tracker ---------- */
-  .route {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    margin: 36px 0 40px;
-    padding: 0 4px;
-  }
+  /* ---------- Route tab bar ---------- */
+  .route { position: relative; display: flex; justify-content: space-between; margin: 24px 0 28px; padding: 0; list-style: none; }
   .route::before {
-    content: "";
-    position: absolute;
-    top: 9px;
-    left: 4%;
-    right: 4%;
-    height: 0;
-    border-top: 2px dashed var(--line);
-    z-index: 0;
+    content: ""; position: absolute; top: 9px; left: 4%; right: 4%; height: 0;
+    border-top: 2px dashed var(--line); z-index: 0;
   }
   .route-node {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
+    position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 6px; flex: 1; background: none; border: none; font: inherit; cursor: pointer; padding: 4px 2px;
+    color: inherit;
   }
-  .route-dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--surface);
-    border: 2px solid var(--pending);
-    transition: transform 0.2s ease;
-  }
-  .route-node[data-status="active"] .route-dot {
-    border-color: var(--active);
-    background: var(--active-bg);
-    box-shadow: 0 0 0 4px var(--active-bg);
-  }
-  .route-node[data-status="done"] .route-dot {
-    border-color: var(--done);
-    background: var(--done);
-  }
-  .route-code {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--ink-faint);
-  }
+  .route-node:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: 6px; }
+  .route-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--surface); border: 2px solid var(--pending); }
+  .route-node[data-status="active"] .route-dot { border-color: var(--active); background: var(--active-bg); box-shadow: 0 0 0 4px var(--active-bg); }
+  .route-node[data-status="done"] .route-dot { border-color: var(--done); background: var(--done); }
+  .route-node[data-current="true"] .route-dot { box-shadow: 0 0 0 3px var(--brand); }
+  .route-code { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.04em; color: var(--ink-faint); }
   .route-node[data-status="active"] .route-code { color: var(--active); }
   .route-node[data-status="done"] .route-code { color: var(--done); }
+  .route-node[data-current="true"] .route-code { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
 
-  .progress-caption {
-    text-align: center;
-    color: var(--ink-muted);
-    font-size: 0.85rem;
-    margin-top: -24px;
-    margin-bottom: 36px;
-  }
-  .progress-caption strong { color: var(--ink); }
+  /* ---------- Panel ---------- */
+  .panel { display: flex; flex-direction: column; gap: 6px; margin-bottom: 28px; }
+  .panel .eyebrow { margin-bottom: 2px; }
+  .panel h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 700; margin: 0 0 6px; text-wrap: balance; }
+  .panel .lede { color: var(--ink-muted); font-size: 0.95rem; max-width: 62ch; line-height: 1.55; margin: 0 0 18px; }
 
-  /* ---------- Phase cards (boarding stub) ---------- */
-  .phases {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 20px 22px; margin-bottom: 16px;
   }
+  .card > .card-label { font-family: "IBM Plex Sans Condensed", sans-serif; text-transform: uppercase;
+    letter-spacing: 0.1em; font-size: 0.68rem; font-weight: 600; color: var(--ink-faint); margin: 0 0 8px; }
+  .card h3 { font-size: 1.2rem; margin: 0 0 6px; }
 
-  .stub {
-    display: grid;
-    grid-template-columns: 1fr 148px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
+  /* ---------- Form ---------- */
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+  .field label { font-size: 0.82rem; font-weight: 600; color: var(--ink-muted); }
+  .field .hint { font-size: 0.76rem; color: var(--ink-faint); }
+  .field input, .field select, .field textarea {
+    font: inherit; font-size: 0.95rem; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%;
   }
-  .stub[data-status="active"] { border-color: var(--active); }
-  .stub[data-status="done"] { border-color: var(--done); }
+  .field textarea { resize: vertical; min-height: 64px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+  fieldset { border: none; padding: 0; margin: 0 0 14px; }
+  .radios { display: flex; gap: 16px; }
+  .radios label { display: flex; align-items: center; gap: 6px; font-weight: 500; color: var(--ink); font-size: 0.9rem; }
 
-  @media (max-width: 560px) {
-    .stub { grid-template-columns: 1fr; }
-    .stub-side { flex-direction: row !important; justify-content: space-between; align-items: center !important; }
-    .stub-side::before { top: 0 !important; left: -9px !important; right: auto !important; transform: none !important; }
+  button.btn {
+    font: inherit; font-weight: 600; font-size: 0.9rem; border: none; border-radius: 9px;
+    padding: 12px 18px; cursor: pointer; background: var(--brand); color: var(--brand-ink);
+    display: inline-flex; align-items: center; gap: 8px; justify-content: center;
   }
+  button.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.btn.secondary { background: var(--surface-alt); color: var(--ink); border: 1px solid var(--line); }
+  button.btn.block { width: 100%; }
 
-  .stub-main {
-    padding: 22px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 0;
-  }
-  .stub-main h2 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin: 0;
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .stub-main h2 .num {
-    color: var(--ink-faint);
-    font-weight: 500;
-    font-size: 0.85rem;
-  }
-  .stub-main p.desc {
-    color: var(--ink-muted);
-    font-size: 0.92rem;
-    line-height: 1.5;
-    margin: 0;
-    max-width: 58ch;
-  }
+  /* recap list once locked */
+  .recap-grid { display: grid; grid-template-columns: repeat(2, minmax(160px, 1fr)); gap: 10px 20px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .recap-grid { grid-template-columns: 1fr; } }
+  .recap-item dt { font-size: 0.72rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+  .recap-item dd { margin: 2px 0 0; font-size: 0.94rem; }
 
-  .checklist {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(160px, 1fr));
-    gap: 6px 18px;
-  }
-  @media (max-width: 480px) { .checklist { grid-template-columns: 1fr; } }
-  .checklist li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    color: var(--ink-muted);
-  }
-  .checklist li .box {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    border: 1.5px solid var(--line);
-    flex-shrink: 0;
-  }
-  .checklist li.filled { color: var(--ink); }
-  .checklist li.filled .box {
-    background: var(--done);
-    border-color: var(--done);
-  }
+  /* ---------- Locked notice ---------- */
+  .locked-card { text-align: center; padding: 32px 22px; color: var(--ink-muted); }
+  .locked-card .icon { font-size: 1.6rem; margin-bottom: 8px; }
 
-  .cta {
-    margin-top: 6px;
-    font-size: 0.85rem;
-    color: var(--active);
-    font-weight: 600;
-  }
+  /* ---------- Search link card ---------- */
+  .route-summary { font-size: 1.25rem; font-weight: 700; margin: 2px 0 6px; }
+  .route-detail { color: var(--ink-muted); font-size: 0.88rem; margin: 0 0 14px; }
 
-  /* stub side (ticket perforation) */
-  .stub-side {
-    position: relative;
-    background: var(--surface-alt);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 18px 12px;
-    border-left: 2px dashed var(--line);
+  /* ---------- Upload zone ---------- */
+  .upload-zone {
+    border: 1.5px dashed var(--line); border-radius: 12px; padding: 18px; text-align: center;
+    color: var(--ink-muted); font-size: 0.88rem; cursor: pointer; background: var(--bg);
   }
-  .stub-side::before,
-  .stub-side::after {
-    content: "";
-    position: absolute;
-    left: -9px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--bg);
-  }
-  .stub-side::before { top: -9px; }
-  .stub-side::after { bottom: -9px; }
+  .upload-zone:hover { border-color: var(--brand); }
+  .upload-zone input[type="file"] { display: none; }
+  .preview-thumb { max-width: 100%; max-height: 220px; border-radius: 10px; display: block; margin: 12px auto 0; border: 1px solid var(--line); }
 
-  .stub-num {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--ink-faint);
-    line-height: 1;
-  }
-  .stub[data-status="active"] .stub-num { color: var(--active); }
-  .stub[data-status="done"] .stub-num { color: var(--done); }
+  .check-status { font-size: 0.85rem; margin-top: 12px; }
+  .check-list { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 6px; }
+  .check-list li { display: flex; gap: 8px; align-items: flex-start; font-size: 0.87rem; }
+  .check-list .mark { flex-shrink: 0; width: 16px; height: 16px; border-radius: 50%; margin-top: 1px; }
+  .check-list li[data-pass="true"] .mark { background: var(--done); }
+  .check-list li[data-pass="false"] .mark { background: var(--danger); }
 
   .pill {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: var(--pending-bg);
-    color: var(--pending);
-    white-space: nowrap;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px; background: var(--pending-bg); color: var(--pending);
+    white-space: nowrap; display: inline-block;
   }
-  .stub[data-status="active"] .pill { background: var(--active-bg); color: var(--active); }
-  .stub[data-status="done"] .pill { background: var(--done-bg); color: var(--done); }
+  .pill[data-status="active"] { background: var(--active-bg); color: var(--active); }
+  .pill[data-status="done"] { background: var(--done-bg); color: var(--done); }
 
-  /* ---------- Footer ---------- */
+  .note-box { background: var(--surface-alt); border-radius: 10px; padding: 14px 16px; font-size: 0.88rem; color: var(--ink-muted); line-height: 1.5; }
+
   footer {
-    margin-top: 40px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    color: var(--ink-faint);
-    font-size: 0.78rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--ink-faint); font-size: 0.78rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
 </style>
 
@@ -337,127 +195,464 @@
 
 <header class="top">
   <div>
-    <p class="eyebrow">Voyage sur mesure — suivi des 6 phases</p>
+    <p class="eyebrow" id="trip-eyebrow">Voyage sur mesure — suivi des 6 phases</p>
     <h1 id="trip-title">Feuille de route</h1>
-    <p class="status-line" id="trip-status">En attente des critères de voyage — réponds dans la conversation pour lancer la Phase 1.</p>
+    <p class="status-line" id="trip-status">Chargement…</p>
   </div>
-  <div class="stamp">
-    <strong>Émis le</strong>
-    <span class="mono" id="issue-date">15 sept. 2026</span>
-  </div>
+  <div class="stamp"><strong>Émis le</strong><span class="mono" id="issue-date"></span></div>
 </header>
 
-<nav class="route" id="route" aria-label="Progression des 6 phases"></nav>
-<p class="progress-caption" id="progress-caption"></p>
+<div id="banner-slot"></div>
 
-<main class="phases" id="phases"></main>
+<nav class="route" id="route" aria-label="Phases du voyage"></nav>
+
+<main class="panel" id="panel"></main>
 
 <footer>
-  <span>Mis à jour par ton Travel Planner à chaque validation de phase.</span>
+  <span>Se met à jour automatiquement, ici et dans la conversation.</span>
   <span class="mono">rvf-all/Wa-sav</span>
 </footer>
 
 <script>
-  const TRIP = {
-    issueDate: "15 sept. 2026",
-    phases: [
-      {
-        code: "BES",
-        title: "Besoin",
-        status: "active", // pending | active | done
-        desc: "Comprendre ton voyage : destination, dates, voyageurs, budget et préférences.",
-        checklist: [
-          { label: "Destination et zone", done: false },
-          { label: "Dates", done: false },
-          { label: "Voyageurs et âges", done: false },
-          { label: "Lieu de départ", done: false },
-          { label: "Budget", done: false },
-          { label: "Aller simple / retour", done: false },
-          { label: "Préférences vol", done: false },
-          { label: "Préférences hébergement", done: false },
-          { label: "Contraintes particulières", done: false },
-          { label: "Avantages voyage (Amex, Priority Pass…)", done: false },
-        ],
-        cta: "→ Réponds dans la conversation pour compléter cette phase.",
-      },
-      {
-        code: "VOL",
-        title: "Vol",
-        status: "pending",
-        desc: "Recherche sur Google Flights (FR, €). Tu choisis ton vol, je vérifie horaires, escales, bagages, prix et cohérence avec tes critères.",
-      },
-      {
-        code: "HEB",
-        title: "Hébergement",
-        status: "pending",
-        desc: "Jusqu'à 10 logements conformes sur Booking — note, avis, budget, emplacement, capacité et règles d'âge vérifiés.",
-      },
-      {
-        code: "ORG",
-        title: "Organisation",
-        status: "pending",
-        desc: "Trajets, horaires, escales, salons (Amex/Priority Pass) et formalités (visa, immigration, douanes) vérifiés à tes dates exactes.",
-      },
-      {
-        code: "RES",
-        title: "Réservation",
-        status: "pending",
-        desc: "Liens officiels pour réserver toi-même — compagnie aérienne et Booking — avec rappel du prix et des conditions avant paiement.",
-      },
-      {
-        code: "PDF",
-        title: "Mémo PDF",
-        status: "pending",
-        desc: "Récapitulatif complet une fois tes réservations confirmées : vols, hébergement, transports, formalités et liens utiles.",
-      },
-    ],
+(function () {
+  "use strict";
+
+  const PHASES = [
+    { code: "BES", title: "Besoin", heading: "Tes critères de voyage" },
+    { code: "VOL", title: "Vol", heading: "Choisir le vol" },
+    { code: "HEB", title: "Hébergement", heading: "Choisir l'hébergement" },
+    { code: "ORG", title: "Organisation", heading: "Organiser le séjour" },
+    { code: "RES", title: "Réservation", heading: "Réserver" },
+    { code: "PDF", title: "Mémo PDF", heading: "Mémo de voyage" },
+  ];
+
+  function defaultTrip() {
+    return {
+      need: null, // { destination, zone, departureCity, dateStart, dateEnd, tripType, adults, children, budget, flightPrefs, stayPrefs, constraints, perks, locked }
+      flight: { status: "pending", assetId: null, checkText: "", checks: [], validated: false },
+      stay: { status: "pending", assetId: null, checkText: "", checks: [], validated: false },
+      org: { status: "pending", content: "" },
+      reservation: { status: "pending", content: "" },
+      memo: { status: "pending", content: "" },
+    };
+  }
+
+  const state = {
+    trip: defaultTrip(),
+    activeTab: "BES",
+    editingNeed: false,
+    tabPickedOnce: false,
+    db: null,
+    assets: null,
+    sample: null,
+    flightUpload: { busy: false, error: null },
+    stayUpload: { busy: false, error: null },
   };
 
-  function statusLabel(s) {
-    return s === "done" ? "Validé" : s === "active" ? "En cours" : "À définir";
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    })[c]);
   }
 
-  function render() {
-    document.getElementById("issue-date").textContent = TRIP.issueDate;
+  function fmtDateFR(iso) {
+    if (!iso) return "";
+    try {
+      return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(iso + "T00:00:00"));
+    } catch (e) { return iso; }
+  }
 
-    const done = TRIP.phases.filter(p => p.status === "done").length;
-    document.getElementById("progress-caption").innerHTML =
-      `<strong>${done} / ${TRIP.phases.length}</strong> phases validées`;
+  function totalTravelers(need) {
+    if (!need) return 0;
+    return (need.adults || 0) + (need.children ? need.children.length : 0);
+  }
 
+  function phaseStatus(code) {
+    const t = state.trip;
+    const locked = !!(t.need && t.need.locked);
+    switch (code) {
+      case "BES": return locked ? "done" : "active";
+      case "VOL": return !locked ? "pending" : (t.flight.validated ? "done" : "active");
+      case "HEB": return !locked ? "pending" : (t.stay.validated ? "done" : "active");
+      case "ORG": return t.org.status;
+      case "RES": return t.reservation.status;
+      case "PDF": return t.memo.status;
+      default: return "pending";
+    }
+  }
+
+  function statusLabel(s) { return s === "done" ? "Validé" : s === "active" ? "En cours" : "À définir"; }
+
+  // ---------- persistence ----------
+  async function saveTrip(mutator) {
+    const clone = JSON.parse(JSON.stringify(state.trip));
+    mutator(clone);
+    state.trip = clone;
+    render();
+    if (!state.db) return;
+    try {
+      await state.db.doc("trip/main").set(clone);
+    } catch (e) {
+      showBanner("La sauvegarde a échoué (" + (e && e.code) + "). Réessaie.", true);
+    }
+  }
+
+  function showBanner(text, isError) {
+    const el = document.getElementById("banner-slot");
+    el.innerHTML = text ? `<div class="banner" style="${isError ? "background:var(--danger-bg);color:var(--danger);border-color:var(--danger)" : ""}">${esc(text)}</div>` : "";
+  }
+
+  // ---------- Google Flights / Booking URL builders ----------
+  function googleFlightsUrl(need) {
+    const bits = [`Vols de ${need.departureCity} à ${need.destination}`, `du ${need.dateStart}`];
+    if (need.tripType !== "simple" && need.dateEnd) bits.push(`au ${need.dateEnd}`);
+    bits.push(`pour ${totalTravelers(need)} voyageur${totalTravelers(need) > 1 ? "s" : ""}`);
+    const url = new URL("https://www.google.com/travel/flights");
+    url.searchParams.set("q", bits.join(" "));
+    url.searchParams.set("gl", "FR");
+    url.searchParams.set("hl", "fr");
+    url.searchParams.set("curr", "EUR");
+    return url.toString();
+  }
+
+  function bookingUrl(need) {
+    const url = new URL("https://www.booking.com/searchresults.fr.html");
+    url.searchParams.set("ss", need.destination);
+    if (need.dateStart) url.searchParams.set("checkin", need.dateStart);
+    if (need.dateEnd) url.searchParams.set("checkout", need.dateEnd);
+    url.searchParams.set("group_adults", String(need.adults || 1));
+    url.searchParams.set("no_rooms", "1");
+    url.searchParams.set("selected_currency", "EUR");
+    const children = need.children || [];
+    url.searchParams.set("group_children", String(children.length));
+    children.forEach((age) => url.searchParams.append("age", String(age)));
+    return url.toString();
+  }
+
+  // ---------- render: header + route ----------
+  function renderHeader() {
+    const need = state.trip.need;
+    document.getElementById("issue-date").textContent = new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short", year: "numeric" }).format(new Date());
+    document.getElementById("trip-title").textContent = need && need.destination ? need.destination : "Feuille de route";
+    const done = PHASES.filter((p) => phaseStatus(p.code) === "done").length;
+    document.getElementById("trip-eyebrow").textContent = `Voyage sur mesure — ${done} / 6 phases validées`;
+    const statusEl = document.getElementById("trip-status");
+    if (!need) statusEl.textContent = "Complète tes critères ci-dessous pour démarrer.";
+    else if (!need.locked) statusEl.textContent = "Critères en cours de saisie — enregistre pour passer à la suite.";
+    else statusEl.textContent = `${need.departureCity} → ${need.destination} · ${fmtDateFR(need.dateStart)}${need.tripType !== "simple" && need.dateEnd ? " → " + fmtDateFR(need.dateEnd) : ""} · ${totalTravelers(need)} voyageur${totalTravelers(need) > 1 ? "s" : ""}`;
+  }
+
+  function renderRoute() {
     const route = document.getElementById("route");
-    route.innerHTML = TRIP.phases.map((p, i) => `
-      <div class="route-node" data-status="${p.status}">
-        <div class="route-dot" title="${p.title} — ${statusLabel(p.status)}"></div>
-        <div class="route-code mono">${p.code}</div>
-      </div>
+    route.innerHTML = PHASES.map((p) => `
+      <button type="button" class="route-node" data-code="${p.code}" data-status="${phaseStatus(p.code)}" data-current="${state.activeTab === p.code}" aria-current="${state.activeTab === p.code ? "step" : "false"}">
+        <span class="route-dot"></span>
+        <span class="route-code mono">${p.code}</span>
+      </button>
     `).join("");
-
-    const phases = document.getElementById("phases");
-    phases.innerHTML = TRIP.phases.map((p, i) => {
-      const num = String(i + 1).padStart(2, "0");
-      const checklist = p.checklist ? `
-        <ul class="checklist">
-          ${p.checklist.map(c => `
-            <li class="${c.done ? "filled" : ""}"><span class="box"></span>${c.label}</li>
-          `).join("")}
-        </ul>` : "";
-      const cta = p.cta ? `<p class="cta">${p.cta}</p>` : "";
-      return `
-        <article class="stub" data-status="${p.status}">
-          <div class="stub-main">
-            <h2><span class="num mono">${num}</span> ${p.title}</h2>
-            <p class="desc">${p.desc}</p>
-            ${checklist}
-            ${cta}
-          </div>
-          <div class="stub-side">
-            <div class="stub-num mono">${p.code}</div>
-            <span class="pill">${statusLabel(p.status)}</span>
-          </div>
-        </article>
-      `;
-    }).join("");
+    route.querySelectorAll(".route-node").forEach((btn) => {
+      btn.addEventListener("click", () => { state.activeTab = btn.dataset.code; render(); });
+    });
   }
 
-  render();
+  // ---------- Phase 1: Besoin ----------
+  function needForm(existing) {
+    const n = existing || {};
+    const childrenRaw = (n.children || []).join(", ");
+    return `
+      <form id="need-form" class="card">
+        <p class="card-label">Phase 1 — Besoin</p>
+        <div class="row2">
+          <div class="field">
+            <label for="f-dest">Destination et zone</label>
+            <input id="f-dest" name="destination" required value="${esc(n.destination || "")}" placeholder="Agadir, Maroc">
+          </div>
+          <div class="field">
+            <label for="f-dep">Ville de départ</label>
+            <input id="f-dep" name="departureCity" required value="${esc(n.departureCity || "")}" placeholder="Paris">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="f-start">Date de départ</label>
+            <input id="f-start" name="dateStart" type="date" required value="${esc(n.dateStart || "")}">
+          </div>
+          <div class="field">
+            <label for="f-end">Date de retour</label>
+            <input id="f-end" name="dateEnd" type="date" value="${esc(n.dateEnd || "")}">
+          </div>
+        </div>
+        <fieldset>
+          <div class="radios">
+            <label><input type="radio" name="tripType" value="aller-retour" ${n.tripType !== "simple" ? "checked" : ""}> Aller-retour</label>
+            <label><input type="radio" name="tripType" value="simple" ${n.tripType === "simple" ? "checked" : ""}> Aller simple</label>
+          </div>
+        </fieldset>
+        <div class="row2">
+          <div class="field">
+            <label for="f-adults">Adultes</label>
+            <input id="f-adults" name="adults" type="number" min="1" required value="${esc(n.adults || 1)}">
+          </div>
+          <div class="field">
+            <label for="f-children">Âges des enfants</label>
+            <input id="f-children" name="children" value="${esc(childrenRaw)}" placeholder="ex : 5, 8 (laisser vide si aucun)">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-budget">Budget</label>
+          <input id="f-budget" name="budget" value="${esc(n.budget || "")}" placeholder="ex : 1500 € pour 2 personnes">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="f-flightprefs">Préférences vol</label>
+            <textarea id="f-flightprefs" name="flightPrefs" placeholder="direct de préférence, pas de vol de nuit…">${esc(n.flightPrefs || "")}</textarea>
+          </div>
+          <div class="field">
+            <label for="f-stayprefs">Préférences hébergement</label>
+            <textarea id="f-stayprefs" name="stayPrefs" placeholder="hôtel avec piscine, proche plage…">${esc(n.stayPrefs || "")}</textarea>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-constraints">Contraintes particulières</label>
+          <textarea id="f-constraints" name="constraints" placeholder="allergie, mobilité réduite, animal…">${esc(n.constraints || "")}</textarea>
+        </div>
+        <div class="field">
+          <label for="f-perks">Avantages voyage</label>
+          <input id="f-perks" name="perks" value="${esc(n.perks || "")}" placeholder="Amex Platinum, Priority Pass…">
+        </div>
+        <button type="submit" class="btn block">Enregistrer et continuer</button>
+      </form>
+    `;
+  }
+
+  function needRecap(n) {
+    const rows = [
+      ["Destination", n.destination], ["Départ de", n.departureCity],
+      ["Dates", fmtDateFR(n.dateStart) + (n.tripType !== "simple" && n.dateEnd ? " → " + fmtDateFR(n.dateEnd) : " (aller simple)")],
+      ["Voyageurs", `${n.adults} adulte${n.adults > 1 ? "s" : ""}` + (n.children && n.children.length ? `, ${n.children.length} enfant(s) (${n.children.join(", ")} ans)` : "")],
+      ["Budget", n.budget || "non précisé"],
+      ["Préférences vol", n.flightPrefs || "aucune précisée"],
+      ["Préférences hébergement", n.stayPrefs || "aucune précisée"],
+      ["Contraintes", n.constraints || "aucune"],
+      ["Avantages voyage", n.perks || "aucun"],
+    ];
+    return `
+      <div class="card">
+        <p class="card-label">Critères validés</p>
+        <dl class="recap-grid">
+          ${rows.map(([k, v]) => `<div class="recap-item"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}
+        </dl>
+        <button type="button" class="btn secondary" id="edit-need-btn">Modifier mes critères</button>
+      </div>
+    `;
+  }
+
+  function renderBesoin(container) {
+    const n = state.trip.need;
+    container.innerHTML = `
+      <p class="eyebrow">Phase 1 — Besoin</p>
+      <h2>Tes critères de voyage</h2>
+      <p class="lede">Ces infos servent à préremplir tes recherches de vol et d'hébergement, et à vérifier tes choix.</p>
+      ${(!n || !n.locked || state.editingNeed) ? needForm(n) : needRecap(n)}
+    `;
+    const form = document.getElementById("need-form");
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const children = String(fd.get("children") || "").split(",").map((s) => parseInt(s.trim(), 10)).filter((v) => !isNaN(v));
+        const need = {
+          destination: String(fd.get("destination") || "").trim(),
+          departureCity: String(fd.get("departureCity") || "").trim(),
+          dateStart: String(fd.get("dateStart") || ""),
+          dateEnd: String(fd.get("dateEnd") || ""),
+          tripType: String(fd.get("tripType") || "aller-retour") === "simple" ? "simple" : "aller-retour",
+          adults: Math.max(1, parseInt(fd.get("adults"), 10) || 1),
+          children,
+          budget: String(fd.get("budget") || "").trim(),
+          flightPrefs: String(fd.get("flightPrefs") || "").trim(),
+          stayPrefs: String(fd.get("stayPrefs") || "").trim(),
+          constraints: String(fd.get("constraints") || "").trim(),
+          perks: String(fd.get("perks") || "").trim(),
+          locked: true,
+        };
+        state.editingNeed = false;
+        saveTrip((t) => { t.need = need; });
+      });
+    }
+    const editBtn = document.getElementById("edit-need-btn");
+    if (editBtn) editBtn.addEventListener("click", () => { state.editingNeed = true; render(); });
+  }
+
+  // ---------- Phase 2 / 3: Vol & Hébergement (shared pattern) ----------
+  function lockedNotice(nextLabel) {
+    return `<div class="card locked-card"><div class="icon">🔒</div>Complète d'abord la <strong>Phase 1 — Besoin</strong> pour ${esc(nextLabel)}.</div>`;
+  }
+
+  async function handleUpload(kind, file, need) {
+    const upState = kind === "flight" ? state.flightUpload : state.stayUpload;
+    upState.busy = true; upState.error = null;
+    render();
+    try {
+      if (!state.assets) throw { code: "not_granted" };
+      const { id } = await state.assets.upload(file);
+      await saveTrip((t) => { t[kind].assetId = id; t[kind].checkText = ""; t[kind].checks = []; });
+      if (state.sample) {
+        const label = kind === "flight" ? "vol" : "hébergement";
+        const critereLines = kind === "flight"
+          ? `- Trajet : ${need.departureCity} → ${need.destination}\n- Dates : du ${need.dateStart}${need.tripType !== "simple" ? " au " + need.dateEnd : " (aller simple)"}\n- Voyageurs : ${totalTravelers(need)} (${need.adults} adulte(s)${need.children.length ? ", enfants " + need.children.join(", ") + " ans" : ""})\n- Budget : ${need.budget || "non précisé"}\n- Préférences vol : ${need.flightPrefs || "aucune"}`
+          : `- Destination : ${need.destination}\n- Dates : du ${need.dateStart} au ${need.dateEnd}\n- Voyageurs : ${totalTravelers(need)} (${need.adults} adulte(s)${need.children.length ? ", enfants " + need.children.join(", ") + " ans" : ""})\n- Budget : ${need.budget || "non précisé"}\n- Préférences hébergement : ${need.stayPrefs || "aucune"}\n- Contraintes : ${need.constraints || "aucune"}`;
+        const prompt = `Tu vérifies une capture d'écran d'une recherche de ${label} pour un voyage.\nCritères attendus :\n${critereLines}\n\nAnalyse l'image et vérifie la cohérence avec ces critères (dates, prix affiché, nombre de voyageurs, et pour un vol : escales/bagages ; pour un hébergement : type de logement).\nRéponds UNIQUEMENT avec un JSON strict : {"ok": boolean, "summary": "2 phrases maximum en français", "checks": [{"label": string, "pass": boolean, "note": string}]}. Si une information n'est pas visible sur l'image, mets pass:false et note "non visible sur la capture". Ne réponds rien d'autre que ce JSON.`;
+        try {
+          const result = await state.sample.json(prompt, { images: file, modelTier: "default" });
+          await saveTrip((t) => {
+            t[kind].checkText = (result && result.summary) || "";
+            t[kind].checks = (result && Array.isArray(result.checks)) ? result.checks : [];
+          });
+        } catch (e) {
+          upState.error = e && e.code === "images_unavailable" ? "La vérification automatique par image n'est pas disponible ici." : "Vérification automatique impossible pour le moment — vérifie toi-même les infos ci-dessus.";
+        }
+      }
+    } catch (e) {
+      upState.error = "L'envoi de la capture a échoué. Réessaie.";
+    } finally {
+      upState.busy = false;
+      render();
+    }
+  }
+
+  function checkCard(kind, item, need) {
+    const upState = kind === "flight" ? state.flightUpload : state.stayUpload;
+    return `
+      <div class="card">
+        <p class="card-label">Valider ${kind === "flight" ? "le vol" : "l'hébergement"}</p>
+        <h3>Envoie une capture d'écran</h3>
+        <label class="upload-zone" for="${kind}-file">
+          ${item.assetId ? "Remplacer la capture" : "Clique ou dépose une capture d'écran ici"}
+          <input type="file" id="${kind}-file" accept="image/*">
+        </label>
+        ${item.assetId ? `<img class="preview-thumb" src="/_blob/${item.assetId}" alt="Capture envoyée">` : ""}
+        ${upState.busy ? `<p class="check-status">⏳ Vérification en cours…</p>` : ""}
+        ${upState.error ? `<p class="check-status" style="color:var(--danger)">${esc(upState.error)}</p>` : ""}
+        ${item.checkText ? `<p class="check-status">${esc(item.checkText)}</p>` : ""}
+        ${item.checks && item.checks.length ? `<ul class="check-list">${item.checks.map((c) => `<li data-pass="${!!c.pass}"><span class="mark"></span><span><strong>${esc(c.label)}</strong> — ${esc(c.note || "")}</span></li>`).join("")}</ul>` : ""}
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn" id="${kind}-validate-btn" ${item.assetId ? "" : "disabled"}>${item.validated ? "✓ Validé" : "Marquer comme validé"}</button>
+          ${item.validated ? `<button type="button" class="btn secondary" id="${kind}-unvalidate-btn">Annuler la validation</button>` : ""}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderVol(container) {
+    const need = state.trip.need;
+    if (!need || !need.locked) { container.innerHTML = `<p class="eyebrow">Phase 2 — Vol</p><h2>Choisir le vol</h2>` + lockedNotice("générer ta recherche de vol"); return; }
+    const url = googleFlightsUrl(need);
+    const item = state.trip.flight;
+    container.innerHTML = `
+      <p class="eyebrow">Phase 2 — Vol</p>
+      <h2>Choisir le vol</h2>
+      <p class="lede">Un seul comparateur : Google Flights, déjà rempli avec ta ville de départ, ta destination et tes dates. Tu choisis, puis tu valides avec une capture.</p>
+      <div class="card">
+        <p class="card-label">Recherche préremplie</p>
+        <p class="route-summary">${esc(need.departureCity)} → ${esc(need.destination)}</p>
+        <p class="route-detail">${esc(need.departureCity)} → ${esc(need.destination)} · ${fmtDateFR(need.dateStart)}${need.tripType !== "simple" ? " → " + fmtDateFR(need.dateEnd) : ""} · ${totalTravelers(need)} voyageur${totalTravelers(need) > 1 ? "s" : ""}</p>
+        <a class="btn block" href="${esc(url)}" target="_blank" rel="noopener">Ouvrir Google Flights ↗</a>
+        <p class="hint" style="margin-top:10px;">Les champs sont générés automatiquement à partir de tes critères — vérifie-les. Rien n'est réservé ici.</p>
+      </div>
+      ${checkCard("flight", item, need)}
+    `;
+    wireUpload("flight", need);
+  }
+
+  function renderHeb(container) {
+    const need = state.trip.need;
+    if (!need || !need.locked) { container.innerHTML = `<p class="eyebrow">Phase 3 — Hébergement</p><h2>Choisir l'hébergement</h2>` + lockedNotice("générer ta recherche d'hébergement"); return; }
+    const url = bookingUrl(need);
+    const item = state.trip.stay;
+    container.innerHTML = `
+      <p class="eyebrow">Phase 3 — Hébergement</p>
+      <h2>Choisir l'hébergement</h2>
+      <p class="lede">Recherche Booking préremplie avec ta destination, tes dates et tes voyageurs. Tu choisis, puis tu valides avec une capture.</p>
+      <div class="card">
+        <p class="card-label">Recherche préremplie</p>
+        <p class="route-summary">${esc(need.destination)}</p>
+        <p class="route-detail">${fmtDateFR(need.dateStart)} → ${fmtDateFR(need.dateEnd)} · ${totalTravelers(need)} voyageur${totalTravelers(need) > 1 ? "s" : ""}${need.children.length ? " (dont enfants " + need.children.join(", ") + " ans)" : ""}</p>
+        <a class="btn block" href="${esc(url)}" target="_blank" rel="noopener">Ouvrir Booking ↗</a>
+        <p class="hint" style="margin-top:10px;">Vérifie note, avis, conditions d'âge et frais avant de choisir. Rien n'est réservé ici.</p>
+      </div>
+      ${checkCard("stay", item, need)}
+    `;
+    wireUpload("stay", need);
+  }
+
+  function wireUpload(kind, need) {
+    const fileInput = document.getElementById(kind + "-file");
+    if (fileInput) fileInput.addEventListener("change", () => { if (fileInput.files[0]) handleUpload(kind, fileInput.files[0], need); });
+    const validateBtn = document.getElementById(kind + "-validate-btn");
+    if (validateBtn) validateBtn.addEventListener("click", () => saveTrip((t) => { t[kind].validated = true; }));
+    const unBtn = document.getElementById(kind + "-unvalidate-btn");
+    if (unBtn) unBtn.addEventListener("click", () => saveTrip((t) => { t[kind].validated = false; }));
+  }
+
+  // ---------- Phases 4-6: chat-driven, read-only ----------
+  function renderChatDriven(container, code, title, heading, lede) {
+    const key = code === "ORG" ? "org" : code === "RES" ? "reservation" : "memo";
+    const item = state.trip[key];
+    container.innerHTML = `
+      <p class="eyebrow">Phase ${PHASES.findIndex((p) => p.code === code) + 1} — ${title}</p>
+      <h2>${heading}</h2>
+      <p class="lede">${lede}</p>
+      <div class="card">
+        <p class="card-label">Statut <span class="pill" data-status="${item.status}" style="margin-left:6px;">${statusLabel(item.status)}</span></p>
+        ${item.content ? `<div class="note-box">${esc(item.content).replace(/\n/g, "<br>")}</div>` : `<p class="note-box">Rien pour l'instant — continue la conversation avec ton Travel Planner pour compléter cette phase. Cette page se mettra à jour automatiquement.</p>`}
+      </div>
+    `;
+  }
+
+  // ---------- top-level render ----------
+  function render() {
+    renderHeader();
+    renderRoute();
+    const panel = document.getElementById("panel");
+    const p = PHASES.find((x) => x.code === state.activeTab) || PHASES[0];
+    if (p.code === "BES") renderBesoin(panel);
+    else if (p.code === "VOL") renderVol(panel);
+    else if (p.code === "HEB") renderHeb(panel);
+    else if (p.code === "ORG") renderChatDriven(panel, "ORG", "Organisation", "Organiser le séjour", "Trajets, horaires, salons, formalités — vérifiés avec ton Travel Planner dans la conversation.");
+    else if (p.code === "RES") renderChatDriven(panel, "RES", "Réservation", "Réserver", "Les liens officiels pour réserver toi-même apparaîtront ici une fois la Phase 4 validée.");
+    else if (p.code === "PDF") renderChatDriven(panel, "PDF", "Mémo PDF", "Mémo de voyage", "Le récapitulatif complet apparaîtra ici une fois tes réservations confirmées.");
+  }
+
+  // ---------- boot ----------
+  async function boot() {
+    render();
+    const [db, assets, sample] = await Promise.all([
+      window.claude?.use ? window.claude.use("db") : Promise.resolve(null),
+      window.claude?.use ? window.claude.use("assets") : Promise.resolve(null),
+      window.claude?.use ? window.claude.use("sample") : Promise.resolve(null),
+    ]);
+    state.db = db; state.assets = assets; state.sample = sample;
+    if (!db) {
+      showBanner("Cette page doit être ouverte dans Claude pour sauvegarder tes réponses (le formulaire ne persistera pas ici).", true);
+    }
+    if (db) {
+      db.doc("trip/main").onSnapshot(
+        (snap) => {
+          state.trip = snap.exists ? Object.assign(defaultTrip(), snap.data()) : defaultTrip();
+          if (!state.tabPickedOnce) {
+            state.tabPickedOnce = true;
+            const firstNotDone = PHASES.find((p) => phaseStatus(p.code) !== "done");
+            state.activeTab = firstNotDone ? firstNotDone.code : "PDF";
+          }
+          render();
+        },
+        () => showBanner("Impossible de charger tes données pour le moment.", true)
+      );
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
 </script>
