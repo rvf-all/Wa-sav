@@ -1,0 +1,463 @@
+<title>Feuille de route</title>
+<style>
+  :root {
+    --bg: #F2F4F6;
+    --surface: #FFFFFF;
+    --surface-alt: #E7EBEE;
+    --ink: #16202B;
+    --ink-muted: #5C6773;
+    --ink-faint: #93A0AB;
+    --line: #CBD4DB;
+    --brand: #1D3A5F;
+    --brand-ink: #FFFFFF;
+    --pending: #8A94A3;
+    --pending-bg: #EEF0F2;
+    --active: #B8730F;
+    --active-bg: #FBF1DF;
+    --done: #2F7A55;
+    --done-bg: #E6F2EA;
+    --shadow: 0 1px 2px rgba(22, 32, 43, 0.06), 0 8px 20px -12px rgba(22, 32, 43, 0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101923;
+      --surface: #17222E;
+      --surface-alt: #1E2B39;
+      --ink: #ECF1F5;
+      --ink-muted: #9DAAB6;
+      --ink-faint: #67757F;
+      --line: #2B3B4A;
+      --brand: #7FA8D6;
+      --brand-ink: #0E1620;
+      --pending: #7C8896;
+      --pending-bg: #1E2833;
+      --active: #E3A23D;
+      --active-bg: #2C2417;
+      --done: #55B885;
+      --done-bg: #16281F;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101923;
+    --surface: #17222E;
+    --surface-alt: #1E2B39;
+    --ink: #ECF1F5;
+    --ink-muted: #9DAAB6;
+    --ink-faint: #67757F;
+    --line: #2B3B4A;
+    --brand: #7FA8D6;
+    --brand-ink: #0E1620;
+    --pending: #7C8896;
+    --pending-bg: #1E2833;
+    --active: #E3A23D;
+    --active-bg: #2C2417;
+    --done: #55B885;
+    --done-bg: #16281F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 24px -14px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    padding-inline: max(16px, calc((100vw - 760px) / 2));
+    padding-block: 32px 64px;
+    margin: 0;
+  }
+
+  .mono {
+    font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+  }
+
+  /* ---------- Header ---------- */
+  header.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  header.top h1 {
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+    font-weight: 700;
+    margin: 4px 0 6px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  header.top .status-line {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    max-width: 46ch;
+  }
+  .stamp {
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  .stamp strong {
+    display: block;
+    color: var(--ink-muted);
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  /* ---------- Route tracker ---------- */
+  .route {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 36px 0 40px;
+    padding: 0 4px;
+  }
+  .route::before {
+    content: "";
+    position: absolute;
+    top: 9px;
+    left: 4%;
+    right: 4%;
+    height: 0;
+    border-top: 2px dashed var(--line);
+    z-index: 0;
+  }
+  .route-node {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  .route-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--pending);
+    transition: transform 0.2s ease;
+  }
+  .route-node[data-status="active"] .route-dot {
+    border-color: var(--active);
+    background: var(--active-bg);
+    box-shadow: 0 0 0 4px var(--active-bg);
+  }
+  .route-node[data-status="done"] .route-dot {
+    border-color: var(--done);
+    background: var(--done);
+  }
+  .route-code {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .route-node[data-status="active"] .route-code { color: var(--active); }
+  .route-node[data-status="done"] .route-code { color: var(--done); }
+
+  .progress-caption {
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: 0.85rem;
+    margin-top: -24px;
+    margin-bottom: 36px;
+  }
+  .progress-caption strong { color: var(--ink); }
+
+  /* ---------- Phase cards (boarding stub) ---------- */
+  .phases {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .stub {
+    display: grid;
+    grid-template-columns: 1fr 148px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .stub[data-status="active"] { border-color: var(--active); }
+  .stub[data-status="done"] { border-color: var(--done); }
+
+  @media (max-width: 560px) {
+    .stub { grid-template-columns: 1fr; }
+    .stub-side { flex-direction: row !important; justify-content: space-between; align-items: center !important; }
+    .stub-side::before { top: 0 !important; left: -9px !important; right: auto !important; transform: none !important; }
+  }
+
+  .stub-main {
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+  .stub-main h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .stub-main h2 .num {
+    color: var(--ink-faint);
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+  .stub-main p.desc {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 58ch;
+  }
+
+  .checklist {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+    gap: 6px 18px;
+  }
+  @media (max-width: 480px) { .checklist { grid-template-columns: 1fr; } }
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+  .checklist li .box {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--line);
+    flex-shrink: 0;
+  }
+  .checklist li.filled { color: var(--ink); }
+  .checklist li.filled .box {
+    background: var(--done);
+    border-color: var(--done);
+  }
+
+  .cta {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--active);
+    font-weight: 600;
+  }
+
+  /* stub side (ticket perforation) */
+  .stub-side {
+    position: relative;
+    background: var(--surface-alt);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 12px;
+    border-left: 2px dashed var(--line);
+  }
+  .stub-side::before,
+  .stub-side::after {
+    content: "";
+    position: absolute;
+    left: -9px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .stub-side::before { top: -9px; }
+  .stub-side::after { bottom: -9px; }
+
+  .stub-num {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    line-height: 1;
+  }
+  .stub[data-status="active"] .stub-num { color: var(--active); }
+  .stub[data-status="done"] .stub-num { color: var(--done); }
+
+  .pill {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--pending-bg);
+    color: var(--pending);
+    white-space: nowrap;
+  }
+  .stub[data-status="active"] .pill { background: var(--active-bg); color: var(--active); }
+  .stub[data-status="done"] .pill { background: var(--done-bg); color: var(--done); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 0.78rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<header class="top">
+  <div>
+    <p class="eyebrow">Voyage sur mesure — suivi des 6 phases</p>
+    <h1 id="trip-title">Feuille de route</h1>
+    <p class="status-line" id="trip-status">En attente des critères de voyage — réponds dans la conversation pour lancer la Phase 1.</p>
+  </div>
+  <div class="stamp">
+    <strong>Émis le</strong>
+    <span class="mono" id="issue-date">15 sept. 2026</span>
+  </div>
+</header>
+
+<nav class="route" id="route" aria-label="Progression des 6 phases"></nav>
+<p class="progress-caption" id="progress-caption"></p>
+
+<main class="phases" id="phases"></main>
+
+<footer>
+  <span>Mis à jour par ton Travel Planner à chaque validation de phase.</span>
+  <span class="mono">rvf-all/Wa-sav</span>
+</footer>
+
+<script>
+  const TRIP = {
+    issueDate: "15 sept. 2026",
+    phases: [
+      {
+        code: "BES",
+        title: "Besoin",
+        status: "active", // pending | active | done
+        desc: "Comprendre ton voyage : destination, dates, voyageurs, budget et préférences.",
+        checklist: [
+          { label: "Destination et zone", done: false },
+          { label: "Dates", done: false },
+          { label: "Voyageurs et âges", done: false },
+          { label: "Lieu de départ", done: false },
+          { label: "Budget", done: false },
+          { label: "Aller simple / retour", done: false },
+          { label: "Préférences vol", done: false },
+          { label: "Préférences hébergement", done: false },
+          { label: "Contraintes particulières", done: false },
+          { label: "Avantages voyage (Amex, Priority Pass…)", done: false },
+        ],
+        cta: "→ Réponds dans la conversation pour compléter cette phase.",
+      },
+      {
+        code: "VOL",
+        title: "Vol",
+        status: "pending",
+        desc: "Recherche sur Google Flights (FR, €). Tu choisis ton vol, je vérifie horaires, escales, bagages, prix et cohérence avec tes critères.",
+      },
+      {
+        code: "HEB",
+        title: "Hébergement",
+        status: "pending",
+        desc: "Jusqu'à 10 logements conformes sur Booking — note, avis, budget, emplacement, capacité et règles d'âge vérifiés.",
+      },
+      {
+        code: "ORG",
+        title: "Organisation",
+        status: "pending",
+        desc: "Trajets, horaires, escales, salons (Amex/Priority Pass) et formalités (visa, immigration, douanes) vérifiés à tes dates exactes.",
+      },
+      {
+        code: "RES",
+        title: "Réservation",
+        status: "pending",
+        desc: "Liens officiels pour réserver toi-même — compagnie aérienne et Booking — avec rappel du prix et des conditions avant paiement.",
+      },
+      {
+        code: "PDF",
+        title: "Mémo PDF",
+        status: "pending",
+        desc: "Récapitulatif complet une fois tes réservations confirmées : vols, hébergement, transports, formalités et liens utiles.",
+      },
+    ],
+  };
+
+  function statusLabel(s) {
+    return s === "done" ? "Validé" : s === "active" ? "En cours" : "À définir";
+  }
+
+  function render() {
+    document.getElementById("issue-date").textContent = TRIP.issueDate;
+
+    const done = TRIP.phases.filter(p => p.status === "done").length;
+    document.getElementById("progress-caption").innerHTML =
+      `<strong>${done} / ${TRIP.phases.length}</strong> phases validées`;
+
+    const route = document.getElementById("route");
+    route.innerHTML = TRIP.phases.map((p, i) => `
+      <div class="route-node" data-status="${p.status}">
+        <div class="route-dot" title="${p.title} — ${statusLabel(p.status)}"></div>
+        <div class="route-code mono">${p.code}</div>
+      </div>
+    `).join("");
+
+    const phases = document.getElementById("phases");
+    phases.innerHTML = TRIP.phases.map((p, i) => {
+      const num = String(i + 1).padStart(2, "0");
+      const checklist = p.checklist ? `
+        <ul class="checklist">
+          ${p.checklist.map(c => `
+            <li class="${c.done ? "filled" : ""}"><span class="box"></span>${c.label}</li>
+          `).join("")}
+        </ul>` : "";
+      const cta = p.cta ? `<p class="cta">${p.cta}</p>` : "";
+      return `
+        <article class="stub" data-status="${p.status}">
+          <div class="stub-main">
+            <h2><span class="num mono">${num}</span> ${p.title}</h2>
+            <p class="desc">${p.desc}</p>
+            ${checklist}
+            ${cta}
+          </div>
+          <div class="stub-side">
+            <div class="stub-num mono">${p.code}</div>
+            <span class="pill">${statusLabel(p.status)}</span>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  render();
+</script>
