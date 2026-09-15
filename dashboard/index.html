@@ -245,8 +245,8 @@
     db: null,
     assets: null,
     sample: null,
-    flightUpload: { busy: false, error: null },
-    stayUpload: { busy: false, error: null },
+    flightUpload: { busy: false, error: null, previewUrl: null },
+    stayUpload: { busy: false, error: null, previewUrl: null },
   };
 
   function esc(s) {
@@ -284,16 +284,35 @@
   function statusLabel(s) { return s === "done" ? "Validé" : s === "active" ? "En cours" : "À définir"; }
 
   // ---------- persistence ----------
+  const LS_KEY = "wa-sav-trip-v1";
+
+  function loadLocalTrip() {
+    try {
+      const raw = window.localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function writeLocalTrip(trip) {
+    try { window.localStorage.setItem(LS_KEY, JSON.stringify(trip)); return true; }
+    catch (e) { return false; }
+  }
+
   async function saveTrip(mutator) {
     const clone = JSON.parse(JSON.stringify(state.trip));
     mutator(clone);
     state.trip = clone;
     render();
-    if (!state.db) return;
-    try {
-      await state.db.doc("trip/main").set(clone);
-    } catch (e) {
-      showBanner("La sauvegarde a échoué (" + (e && e.code) + "). Réessaie.", true);
+    if (state.db) {
+      try {
+        await state.db.doc("trip/main").set(clone);
+      } catch (e) {
+        showBanner("La sauvegarde a échoué (" + (e && e.code) + "). Réessaie.", true);
+      }
+      return;
+    }
+    if (!writeLocalTrip(clone)) {
+      showBanner("Impossible d'enregistrer sur cet appareil (stockage du navigateur indisponible ou plein).", true);
     }
   }
 
@@ -493,8 +512,17 @@
     const upState = kind === "flight" ? state.flightUpload : state.stayUpload;
     upState.busy = true; upState.error = null;
     render();
+
+    if (!state.assets) {
+      // Mode secours (hors Claude) : pas de stockage distant — aperçu local seulement, non persistant.
+      if (upState.previewUrl) URL.revokeObjectURL(upState.previewUrl);
+      upState.previewUrl = URL.createObjectURL(file);
+      upState.busy = false;
+      render();
+      return;
+    }
+
     try {
-      if (!state.assets) throw { code: "not_granted" };
       const { id } = await state.assets.upload(file);
       await saveTrip((t) => { t[kind].assetId = id; t[kind].checkText = ""; t[kind].checks = []; });
       if (state.sample) {
@@ -523,21 +551,24 @@
 
   function checkCard(kind, item, need) {
     const upState = kind === "flight" ? state.flightUpload : state.stayUpload;
+    const hasImage = !!(item.assetId || upState.previewUrl);
+    const imgSrc = item.assetId ? "/_blob/" + item.assetId : upState.previewUrl;
     return `
       <div class="card">
         <p class="card-label">Valider ${kind === "flight" ? "le vol" : "l'hébergement"}</p>
         <h3>Envoie une capture d'écran</h3>
         <label class="upload-zone" for="${kind}-file">
-          ${item.assetId ? "Remplacer la capture" : "Clique ou dépose une capture d'écran ici"}
+          ${hasImage ? "Remplacer la capture" : "Clique ou dépose une capture d'écran ici"}
           <input type="file" id="${kind}-file" accept="image/*">
         </label>
-        ${item.assetId ? `<img class="preview-thumb" src="/_blob/${item.assetId}" alt="Capture envoyée">` : ""}
+        ${imgSrc ? `<img class="preview-thumb" src="${esc(imgSrc)}" alt="Capture envoyée">` : ""}
+        ${!state.assets ? `<p class="hint" style="margin-top:10px;">Mode secours : cette capture est seulement affichée ici, elle n'est pas enregistrée ni vérifiée automatiquement. Envoie-la aussi à ton Travel Planner dans la conversation pour qu'il la vérifie.</p>` : ""}
         ${upState.busy ? `<p class="check-status">⏳ Vérification en cours…</p>` : ""}
         ${upState.error ? `<p class="check-status" style="color:var(--danger)">${esc(upState.error)}</p>` : ""}
         ${item.checkText ? `<p class="check-status">${esc(item.checkText)}</p>` : ""}
         ${item.checks && item.checks.length ? `<ul class="check-list">${item.checks.map((c) => `<li data-pass="${!!c.pass}"><span class="mark"></span><span><strong>${esc(c.label)}</strong> — ${esc(c.note || "")}</span></li>`).join("")}</ul>` : ""}
         <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button type="button" class="btn" id="${kind}-validate-btn" ${item.assetId ? "" : "disabled"}>${item.validated ? "✓ Validé" : "Marquer comme validé"}</button>
+          <button type="button" class="btn" id="${kind}-validate-btn" ${hasImage ? "" : "disabled"}>${item.validated ? "✓ Validé" : "Marquer comme validé"}</button>
           ${item.validated ? `<button type="button" class="btn secondary" id="${kind}-unvalidate-btn">Annuler la validation</button>` : ""}
         </div>
       </div>
@@ -625,6 +656,13 @@
   }
 
   // ---------- boot ----------
+  function pickInitialTab() {
+    if (state.tabPickedOnce) return;
+    state.tabPickedOnce = true;
+    const firstNotDone = PHASES.find((p) => phaseStatus(p.code) !== "done");
+    state.activeTab = firstNotDone ? firstNotDone.code : "PDF";
+  }
+
   async function boot() {
     render();
     const [db, assets, sample] = await Promise.all([
@@ -633,23 +671,25 @@
       window.claude?.use ? window.claude.use("sample") : Promise.resolve(null),
     ]);
     state.db = db; state.assets = assets; state.sample = sample;
-    if (!db) {
-      showBanner("Cette page doit être ouverte dans Claude pour sauvegarder tes réponses (le formulaire ne persistera pas ici).", true);
-    }
+
     if (db) {
       db.doc("trip/main").onSnapshot(
         (snap) => {
           state.trip = snap.exists ? Object.assign(defaultTrip(), snap.data()) : defaultTrip();
-          if (!state.tabPickedOnce) {
-            state.tabPickedOnce = true;
-            const firstNotDone = PHASES.find((p) => phaseStatus(p.code) !== "done");
-            state.activeTab = firstNotDone ? firstNotDone.code : "PDF";
-          }
+          pickInitialTab();
           render();
         },
         () => showBanner("Impossible de charger tes données pour le moment.", true)
       );
+      return;
     }
+
+    // Hors Claude : mode secours, tout reste local à ce navigateur.
+    const local = loadLocalTrip();
+    if (local) state.trip = Object.assign(defaultTrip(), local);
+    pickInitialTab();
+    showBanner("Mode secours (hors Claude) : tes réponses sont enregistrées uniquement sur cet appareil et ce navigateur — pas de synchronisation. La vérification automatique des captures n'est pas disponible ici : envoie-les à ton Travel Planner dans la conversation.", false);
+    render();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
